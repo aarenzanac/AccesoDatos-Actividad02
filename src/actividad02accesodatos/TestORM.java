@@ -9,13 +9,14 @@ package actividad02accesodatos;
  *
  * @author USUARIO
  */
-public class Actividad02AccesoDatos {
+public class TestORM {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        IncidenciasORM iORM = new IncidenciasORM();
+        iORM.menuPrincipal();
     }
     
 }
