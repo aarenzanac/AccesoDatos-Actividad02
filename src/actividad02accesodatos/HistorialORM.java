@@ -44,6 +44,8 @@ public class HistorialORM {
                                                                   
                     case 4:
                         System.out.println("Ha elegido retornar al menú anteior.\n");
+                        IncidenciasORM iORM = new IncidenciasORM();
+                        iORM.menuLogueado();
                         break;
                         
                     default:

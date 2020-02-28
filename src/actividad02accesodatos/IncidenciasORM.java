@@ -7,6 +7,8 @@ package actividad02accesodatos;
 
 import clasesPojo.Empleado;
 import clasesPojo.Incidencia;
+import PideDatos.PideDatos;
+import java.io.IOException;
 
 /**
  *
@@ -29,7 +31,7 @@ public class IncidenciasORM {
                 + "5 - Eliminar un empleado.\n"
                 + "6 - Salir.\n");
              
-                opcion = PideDatos.PideDatos.pideEntero();
+                opcion = PideDatos.pideEntero();
                 
                
                 switch (opcion){
@@ -40,6 +42,7 @@ public class IncidenciasORM {
                         
                     case 2:
                         System.out.println("Ha elegido loguear un empleado.\n");
+                        menuLogueado();
                         validarEmpleado();
                         continue;
                         
@@ -86,7 +89,7 @@ public class IncidenciasORM {
                 + "6 - Acceder al menú Historial.\n"
                 + "7 - Desloguearse y salir al menú anterior.\n");
              
-                opcion = PideDatos.PideDatos.pideEntero();
+                opcion = PideDatos.pideEntero();
                 
                
                 switch (opcion){
@@ -117,6 +120,8 @@ public class IncidenciasORM {
                     
                     case 6:
                         System.out.println("Ha elegido acceder al menú Historial.\n");
+                        HistorialORM hORM = new HistorialORM();
+                        hORM.menuHistorial();
                         hORM.menuHistorial();
                         continue;    
                     case 7:
@@ -132,24 +137,63 @@ public class IncidenciasORM {
         
     }
     
-    public void insertarEmpleado(){}
+    public void insertarEmpleado() throws IOException{
+        Empleado empleadoInsertar = new Empleado();
+        empleadoInsertar.setNombreUsuario(PideDatos.pideString("Introduzca un nombre de usuario: \n"));
+        empleadoInsertar.setNombreCompleto(PideDatos.pideString("Introduzca el nombre completo: \n"));
+        empleadoInsertar.setTelefono(PideDatos.pideString("Introduzca el número de teléfono: \n"));
+        empleadoInsertar.setPassword(PideDatos.pideString("Introduzca un password"));
+        
+        //COMPROBAR SI EL NOMBRE DE USUARIO EXISTE ANTES DE INSERAR EN LA BD
+    }
     
     public void validarEmpleado(){}
     
-    public void modificarEmpleado(){}
+    public void modificarEmpleado() throws IOException{
+        String nombreUsuarioEmpleadoParaModificar = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
+        
+        //SELECCIONAR EL EMPLEADO A MODIFICAR EN FUNCIÓN DE SU NOMBREUSUARIO
+        
+        //CREO OBJETO CON EMPLEADO MODIFICADO MENOS NOMBREUSUARIO QUE NO SE PUEDE MODIFICAR
+        Empleado empleadoModificado = new Empleado();
+        empleadoModificado.setNombreUsuario(nombreUsuarioEmpleadoParaModificar);
+        empleadoModificado.setNombreCompleto(PideDatos.pideString("Introduzca el nombre completo: \n"));
+        empleadoModificado.setTelefono(PideDatos.pideString("Introduzca el número de teléfono: \n"));
+        empleadoModificado.setPassword(PideDatos.pideString("Introduzca un password"));
+        
+        //INSERTAR EL OBJETO EMPLEADO MODIFICADO
+    }
     
-    public void cambiarContraseña(){}
+    public void cambiarContraseña() throws IOException{
+        String nombreUsuarioEmpleadoParaModificarPassword = PideDatos.pideString("Introduzca el nombre de usuario del empleado para modificar password: \n");
+        String nuevaContraseña = PideDatos.pideString("Introduzca la nueva contraseña: \n");
+        
+    }
     
-    public void eliminarEmpleado(){}
+    public void eliminarEmpleado() throws IOException{
+        String nombreUsuarioEliminar = PideDatos.pideString("Introduzca el nombre de usuario del empleado a eliminar: \n");
+    }
     
     public void obtenerIncidencia(){}
     
     public void obtenerListadoIncidencias(){}
     
-    public void insertarIncidencia(){}
+    public void insertarIncidencia() throws IOException{
+        Incidencia incidenciaInsertar = new Incidencia();
+        incidenciaInsertar.setIdIncidencia(PideDatos.pideEntero("Introduzca una id de la incidencia: \n"));
+        incidenciaInsertar.setOrigen(PideDatos.pideString("Introduzca el nombre de usuario del empleado que genera la incidencia: \n"));
+        incidenciaInsertar.setDestino(PideDatos.pideString("Introduzca el nombre de usuario del empleado destino: \n"));
+        incidenciaInsertar.setFechaHora(PideDatos.pideString("Introduzca la fecha y hora de la incidencia: \n"));
+        incidenciaInsertar.setDetalle(PideDatos.pideString("Introduzca la descripción de la incidencia: \n"));
+        incidenciaInsertar.setTipo(FuncionesVariadas.solicitarPrioridad());
+    }
     
-    public void obtenerIncidenciasEmpleadoDestino(){}
+    public void obtenerIncidenciasEmpleadoDestino() throws IOException{
+        String nombreUsuarioDestinoVisualizarIncidencias = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
+    }
     
-    public void obtenerIncidenciasEmpleadoOrigen(){}
+    public void obtenerIncidenciasEmpleadoOrigen() throws IOException{
+        String nombreUsuarioOrigenVisualizarIncidencias = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
+    }
     
 }
