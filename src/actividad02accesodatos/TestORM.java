@@ -15,8 +15,8 @@ public class TestORM {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        IncidenciasORM iORM = new IncidenciasORM();
-        iORM.menuPrincipal();
+        Menus menu = new Menus();
+        menu.menuPrincipal();
     }
     
 }
