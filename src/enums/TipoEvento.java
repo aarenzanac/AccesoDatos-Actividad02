@@ -10,5 +10,5 @@ package enums;
  * @author USUARIO
  */
 public enum TipoEvento {
-    I, E, U;
+    I, C, U;
 }

@@ -17,24 +17,24 @@ public class FuncionesVariadas {
     
     String prioridadString = null;
     
-    public static Prioridad crearPrioridad(String prioridadString){
+    /*public static Prioridad crearPrioridad(String prioridadString){
         Prioridad p = null;
         if(prioridadString.equals("URGENTE")){
         return p.URGENTE;
         }else{
         return p.NORMAL;
         }
-    }
+    }*/
     
-    public static Prioridad solicitarPrioridad() throws IOException{
+    public static String solicitarPrioridad() throws IOException{
         String prioridadString = null;
         do{
             prioridadString = PideDatos.pideString("Introduzca la prioridad (NORMAL O URGENTE): \n").toUpperCase();
-            if(!prioridadString.equals("URGENTE") || !prioridadString.equals("NORMAL")){
+            if(!prioridadString.equals("URGENTE") && !prioridadString.equals("NORMAL")){
                 System.out.println("Valor incorrecto. Debe ser Normal o Urgente.\n");
             }
-        }while(!prioridadString.equals("URGENTE") || !prioridadString.equals("NORMAL"));
+        }while(!prioridadString.equals("URGENTE") && !prioridadString.equals("NORMAL"));
         
-        return crearPrioridad(prioridadString);
+        return prioridadString;
     }
 }

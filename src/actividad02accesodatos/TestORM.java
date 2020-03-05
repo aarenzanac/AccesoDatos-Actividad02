@@ -5,18 +5,22 @@
  */
 package actividad02accesodatos;
 
+import clasesPojo.Empleado;
+import clasesPojo.Historial;
+
+
 /**
  *
  * @author USUARIO
  */
 public class TestORM {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         Menus menu = new Menus();
         menu.menuPrincipal();
+        System.exit(0);
+       
     }
+    
     
 }

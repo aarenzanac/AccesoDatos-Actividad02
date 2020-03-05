@@ -40,8 +40,6 @@ public class Menus {
                         
                     case 2:
                         System.out.println("Ha elegido loguear un empleado.\n");
-                        boolean existeEmpleado = iORM.validarEmpleado();
-                        menuLogueado();
                         iORM.validarEmpleado();
                         continue;
                         
@@ -75,7 +73,7 @@ public class Menus {
     
     
     public void menuLogueado(){
-        System.out.println("Bienvenido empleado.\n");
+        System.out.println("Bienvenido a la intranet.\n");
         System.out.println("A continuación,elija una de las siguientes opciones:\n");
         
                     
@@ -105,7 +103,7 @@ public class Menus {
                         
                     case 3:
                         System.out.println("Ha elegido insertar una nueva incidencia.\n");
-                                               
+                        iORM.insertarIncidencia();
                         continue;
                         
                     case 4:
