@@ -57,9 +57,9 @@ public class PideDatos {
     }
     
     public static int pideEntero(String cadena){
-        int numero = 0;
+        int numero = -1;
        
-        while (numero == 0){
+        while (numero == -1){
             try{
                 //muestra la pregunta introducida anteriormente y pregunta un número entero por teclado
                 System.out.println(cadena);

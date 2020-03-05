@@ -6,6 +6,7 @@
 package actividad02accesodatos;
 
 import PideDatos.PideDatos;
+import clasesPojo.Empleado;
 
 /**
  *
@@ -14,6 +15,7 @@ import PideDatos.PideDatos;
 public class Menus {
     IncidenciasORM iORM = new IncidenciasORM();
     HistorialORM hORM = new HistorialORM();
+    
         
     public void menuPrincipal(){
         System.out.println("Bienvenido al programa de Gestión de Incidencias.\n");

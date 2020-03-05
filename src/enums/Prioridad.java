@@ -9,6 +9,8 @@ package enums;
  *
  * @author USUARIO
  */
+
+//NO UTILIZADO PUESTO QUE HIBERNATE HA MARCADO LA PRIORIDAD COMO STRINGS
 public enum Prioridad {
     URGENTE, NORMAL;
 }

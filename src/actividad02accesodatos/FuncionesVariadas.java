@@ -8,6 +8,7 @@ package actividad02accesodatos;
 import enums.Prioridad;
 import PideDatos.PideDatos;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,9 +16,10 @@ import java.io.IOException;
  */
 public class FuncionesVariadas {
     
-    String prioridadString = null;
+    //NO UTILIZADO PUESTO QUE HIBERNATE HA MARCADO LA PRIORIDAD COMO STRING
+    /*String prioridadString = null;
     
-    /*public static Prioridad crearPrioridad(String prioridadString){
+    public static Prioridad crearPrioridad(String prioridadString){
         Prioridad p = null;
         if(prioridadString.equals("URGENTE")){
         return p.URGENTE;
@@ -34,7 +36,18 @@ public class FuncionesVariadas {
                 System.out.println("Valor incorrecto. Debe ser Normal o Urgente.\n");
             }
         }while(!prioridadString.equals("URGENTE") && !prioridadString.equals("NORMAL"));
+                 
+        String prioridadFormateada = "";
         
-        return prioridadString;
+        String[] split = prioridadString.split("");
+        for(int i = 0; i < split.length; i++){
+            if(i==0){
+                prioridadFormateada += split[i].toUpperCase();
+            }else{
+                prioridadFormateada += split[i].toLowerCase();
+            }
+        }
+                
+        return prioridadFormateada;
     }
 }

@@ -71,10 +71,7 @@ public class Incidencia  implements java.io.Serializable {
         this.tipo = tipo;
     }
 
-    /*@Override
-    public String toString() {
-        return "Incidencia{" + "IdIncidencia= " + idincidencia + " -- Fecha/Hora= " + fechahora + " -- Origen= " + empleadoByOrigen.getNombreusuario() + " -- Destino= " + empleadoByDestino.getNombreusuario() + " -- Detalle= " + detalle + " -- Tipo= " + tipo + '}';
-    }*/
+    
 
 }
 

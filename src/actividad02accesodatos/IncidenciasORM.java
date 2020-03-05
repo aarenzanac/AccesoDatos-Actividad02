@@ -54,11 +54,11 @@ public class IncidenciasORM {
     public void validarEmpleado(){
         Menus m = new Menus();
         boolean login = false;
+        Empleado empleadoLogin = new Empleado();
         try {
             System.out.println("A continuación introduzca los datos de login: \n");
             String nombreUsuario = PideDatos.pideString("Nombre de usuario: \n");
             String password = PideDatos.pideString("Password: \n");
-            Empleado empleadoLogin = new Empleado();
             empleadoLogin.setNombreusuario(nombreUsuario);
             empleadoLogin.setPassword(password);
             //LE PASO EL OBJETO EMPLEADO CON LOS DATOS DEL USUARIO Y SI EXISTE ESE USUARIO CON ESE PASSWORD DEVUELVE TRUE         
@@ -67,46 +67,45 @@ public class IncidenciasORM {
             Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
         }
         if(login){
+            hORM.insertarEvento("I", empleadoLogin);
             m.menuLogueado();
+            
         }else{
             System.out.println("Nombre de usuario o contraseña incorrectos. \n");
         }
     }
     
     public void modificarEmpleado(){
-        try {Empleado empleadoModificar = new Empleado();
-            //PIDO EL NOMBRE DE USUARIO PARA MODIFICAR. EL NOMBRE DE USUARIO CONSIDERO NO MODIFICABLE Y LA CONTRASEÑA
-            //TAMPOCO POR CAMBIARSE CON OTRA OPCIÓN DEL MENÚ.
-            String nombreUsuarioEmpleadoParaModificar = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
-            empleadoModificar.setNombreusuario(nombreUsuarioEmpleadoParaModificar);
-            //COMPRUEBO SI EXISTE
-            boolean existe = comprobarExistenciaEmpleado(empleadoModificar);
+        Empleado empleadoModificar = crearEmpleadoComprobaciones();
             
-            if(!existe){
-                System.out.println("El usuario que indica no existe con lo que no se puede modificar. Introduzca un nombre de usuario nuevo.\n");
-            }else{empleadoModificar = seleccionarEmpleado(empleadoModificar);
-                empleadoModificar.setNombrecompleto(PideDatos.pideString("Introduzca el nuevo nombre completo: \n"));
-                empleadoModificar.setTelefono(PideDatos.pideString("Introduzca el nuevo número de teléfono: \n"));
-                Session session = NewHibernateUtil.getSessionFactory().openSession();
-                Transaction tx = session.beginTransaction();
-                session.update(empleadoModificar);
-                tx.commit();
-                session.close();
-                System.out.println("Empleado modificado con éxito.\n");
+        //COMPRUEBO SI EXISTE
+        boolean existe = comprobarExistenciaEmpleado(empleadoModificar);
+
+        if(!existe){
+            System.out.println("El usuario que indica no existe con lo que no se puede modificar. Introduzca un nombre de usuario nuevo.\n");
+        }else{try {
+                    empleadoModificar = seleccionarEmpleado(empleadoModificar);
+                    empleadoModificar.setNombrecompleto(PideDatos.pideString("Introduzca el nuevo nombre completo: \n"));
+                    empleadoModificar.setTelefono(PideDatos.pideString("Introduzca el nuevo número de teléfono: \n"));
+                    Session session = NewHibernateUtil.getSessionFactory().openSession();
+                    Transaction tx = session.beginTransaction();
+                    session.update(empleadoModificar);
+                    tx.commit();
+                    session.close();
+                    System.out.println("Empleado modificado con éxito.\n");
+                } catch (IOException ex) {
+                Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (IOException ex) {
-            System.out.println("Error modificando empleado " + ex.getMessage());
-            Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
     }
     
     public void cambiarContraseña(){
-        try {Empleado empleadoModificarContraseña = new Empleado();
-            String nombreUsuarioEmpleadoParaModificarPassword = PideDatos.pideString("Introduzca el nombre de usuario del empleado para modificar password: \n");
-            empleadoModificarContraseña.setNombreusuario(nombreUsuarioEmpleadoParaModificarPassword);
-            //COMPRUEBO SI EXISTE
-            boolean existe = comprobarExistenciaEmpleado(empleadoModificarContraseña);
-            if(existe){
+        Empleado empleadoModificarContraseña = crearEmpleadoComprobaciones();
+
+        boolean existe = comprobarExistenciaEmpleado(empleadoModificarContraseña);
+        if(existe){
+            try {
                 empleadoModificarContraseña = seleccionarEmpleado(empleadoModificarContraseña);
                 empleadoModificarContraseña.setPassword(PideDatos.pideString("Introduzca la nueva contraseña: \n"));
                 Session session = NewHibernateUtil.getSessionFactory().openSession();
@@ -115,27 +114,18 @@ public class IncidenciasORM {
                 tx.commit();
                 session.close();
                 System.out.println("Contraseña modificada con éxito.\n");
-            }else{
-                System.out.println("El usuario al que quiere cambiar la contraseña no existe.\n");
+            } catch (IOException ex) {
+                Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        } catch (IOException ex) {
-            System.out.println("Error modificando cambiando contraseña " + ex.getMessage());
-            Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }else{
+            System.out.println("El usuario al que quiere cambiar la contraseña no existe.\n");
+        }        
     }
     
     public void eliminarEmpleado(){
-        String nombreUsuarioEliminar = null;
-        try {
-            nombreUsuarioEliminar = PideDatos.pideString("Introduzca el nombre de usuario del empleado a eliminar: \n");
-        } catch (IOException ex) {
-            System.out.println("Error eliminando empleado " + ex.getMessage());
-            Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Empleado empleadoEliminar = new Empleado();
-        empleadoEliminar.setNombreusuario(nombreUsuarioEliminar);
+        
+        Empleado empleadoEliminar = crearEmpleadoComprobaciones();
+       
         boolean existe = comprobarExistenciaEmpleado(empleadoEliminar);
         if(existe){
             empleadoEliminar = seleccionarEmpleado(empleadoEliminar);
@@ -188,21 +178,48 @@ public class IncidenciasORM {
     }
     
     public void obtenerIncidenciasEmpleadoDestino(){
-        try {
-            String nombreUsuarioDestinoVisualizarIncidencias = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
-        } catch (IOException ex) {
-            System.out.println("Error obteniendo incidencias " + ex.getMessage());
-            Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
+        Empleado empleadoDestino = crearEmpleadoComprobaciones();
+        
+        boolean existe = comprobarExistenciaEmpleado(empleadoDestino);
+        
+        if(!existe){
+            System.out.println("El usuario introducido no existe. \n");
+        }else{
+            List incidenciasPorEmpleadoDestino =  seleccionarIncidenciasPorEmpleadoDestino(empleadoDestino);
+            System.out.println("Listado de incidencias para el usuario " + empleadoDestino.getNombreusuario());
+            for(int i = 0; i < incidenciasPorEmpleadoDestino.size(); i++){
+                mostrarIncidencia((Incidencia) incidenciasPorEmpleadoDestino.get(i));
+            }
+         //hORM.insertarEvento("C", e);
         }
     }
     
     public void obtenerIncidenciasEmpleadoOrigen(){
-        try {
-            String nombreUsuarioOrigenVisualizarIncidencias = PideDatos.pideString("Introduzca el nombre de usuario del empleado a modificar: \n");
+        Empleado empleadoOrigen = crearEmpleadoComprobaciones();
+        
+        boolean existe = comprobarExistenciaEmpleado(empleadoOrigen);
+        
+        if(!existe){
+            System.out.println("El usuario introducido no existe. \n");
+        }else{
+            List incidenciasPorEmpleadoOrigen =  seleccionarIncidenciasPorEmpleadoOrigen(empleadoOrigen);
+            System.out.println("Listado de incidencias para el usuario " + empleadoOrigen.getNombreusuario());
+            for(int i = 0; i < incidenciasPorEmpleadoOrigen.size(); i++){
+                mostrarIncidencia((Incidencia) incidenciasPorEmpleadoOrigen.get(i));
+            }
+         //hORM.insertarEvento("C", e);    
+        }
+    }
+    
+    public static Empleado crearEmpleadoComprobaciones(){
+        Empleado empleadoComprobaciones = new Empleado();
+        try {String nombreUsuario = PideDatos.pideString("Introduzca el nombre de usuario del empleado: \n");
+            empleadoComprobaciones.setNombreusuario(nombreUsuario);
         } catch (IOException ex) {
-            System.out.println("Error obteniendo incidencias " + ex.getMessage());
+            System.out.println("Error " + ex.getMessage());
             Logger.getLogger(IncidenciasORM.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return empleadoComprobaciones;
     }
     
     public static boolean comprobarExistenciaEmpleado(Empleado e){
@@ -256,7 +273,7 @@ public class IncidenciasORM {
     
     public static Incidencia seleccionarIncidencia(Incidencia i){
         Session session = NewHibernateUtil.getSessionFactory().openSession();
-        String c = "select i from Incidencia i WHERE idincidencia = '" + i.getIdincidencia()+ "'";
+        String c = "select i from Incidencia i WHERE idincidencia = " + i.getIdincidencia();
         Query q = session.createQuery(c);
         List results = q.list();
         session.close();
@@ -279,7 +296,7 @@ public class IncidenciasORM {
         boolean existe1 = false;
         
         try {do{
-                //nuevaIncidencia.setIdincidencia(PideDatos.pideEntero("Introduzca una id de la incidencia: \n"));
+                nuevaIncidencia.setIdincidencia(obtenerSiguienteId());
                 empleadoOrigen.setNombreusuario(PideDatos.pideString("Introduzca el nombre de usuario del empleado origen; \n"));
                 existe = comprobarExistenciaEmpleado(empleadoOrigen);
                 if(existe){
@@ -299,7 +316,7 @@ public class IncidenciasORM {
                     System.out.println("El empleado introducido no existe");
                 }
             }while(!existe1);
-            nuevaIncidencia.setFechahora(PideDatos.pideString("Introduzca la fecha y hora de la incidencia: \n"));
+            nuevaIncidencia.setFechahora(HistorialORM.obtenerFechaHora());
             nuevaIncidencia.setDetalle(PideDatos.pideString("Introduzca la descripción de la incidencia: \n"));
             nuevaIncidencia.setTipo(FuncionesVariadas.solicitarPrioridad());
         } catch (IOException ex) {
@@ -308,5 +325,36 @@ public class IncidenciasORM {
         }
         
         return nuevaIncidencia;
+    }
+    
+    public static int obtenerSiguienteId(){
+        int siguienteId = 0;
+        Session session = NewHibernateUtil.getSessionFactory().openSession();
+        String c = "select i from Incidencia i";
+        Query q = session.createQuery(c);
+        List results = q.list();
+        session.close();
+        int cantidadIncidencias = results.size();
+        siguienteId = cantidadIncidencias + 1;
+        System.out.println(siguienteId);
+        return siguienteId;
+    }
+    
+    public static List seleccionarIncidenciasPorEmpleadoDestino(Empleado e){
+        Session session = NewHibernateUtil.getSessionFactory().openSession();
+        String c = "select i from Incidencia i WHERE destino = '" + e.getNombreusuario() + "'";
+        Query q = session.createQuery(c);
+        List results = q.list();
+        session.close();
+        return results;
+    }
+    
+    public static List seleccionarIncidenciasPorEmpleadoOrigen(Empleado e){
+        Session session = NewHibernateUtil.getSessionFactory().openSession();
+        String c = "select i from Incidencia i WHERE origen = '" + e.getNombreusuario() + "'";
+        Query q = session.createQuery(c);
+        List results = q.list();
+        session.close();
+        return results;
     }
 }
