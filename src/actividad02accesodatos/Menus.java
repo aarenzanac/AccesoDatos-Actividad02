@@ -15,6 +15,7 @@ import clasesPojo.Empleado;
 public class Menus {
     IncidenciasORM iORM = new IncidenciasORM();
     HistorialORM hORM = new HistorialORM();
+   
     
         
     public void menuPrincipal(){
@@ -74,7 +75,7 @@ public class Menus {
     }
     
     
-    public void menuLogueado(){
+    public void menuLogueado(Empleado empleadoLogin){
         System.out.println("Bienvenido a la intranet.\n");
         System.out.println("A continuación,elija una de las siguientes opciones:\n");
         
@@ -105,23 +106,23 @@ public class Menus {
                         
                     case 3:
                         System.out.println("Ha elegido insertar una nueva incidencia.\n");
-                        iORM.insertarIncidencia();
+                        iORM.insertarIncidencia(empleadoLogin);
                         continue;
                         
                     case 4:
                         System.out.println("Ha elegido obtener incidencias creadas para un empleado.\n");
-                        iORM.obtenerIncidenciasEmpleadoDestino();
+                        iORM.obtenerIncidenciasEmpleadoDestino(empleadoLogin);
                         continue;
                         
                     case 5:
                         System.out.println("Ha elegido Obtener incidencias creadas por un empleado.\n");
-                        iORM.obtenerIncidenciasEmpleadoOrigen();
+                        iORM.obtenerIncidenciasEmpleadoOrigen(empleadoLogin);
                         continue;
                     
                     case 6:
                         System.out.println("Ha elegido acceder al menú Historial.\n");
                         HistorialORM hORM = new HistorialORM();
-                        menuHistorial();
+                        menuHistorial(empleadoLogin);
                         continue;    
                     case 7:
                         System.out.println("Ha elegido desloguearse y retornar al menú anterior.\n");
@@ -137,7 +138,7 @@ public class Menus {
         
     }
     
-    public void menuHistorial(){
+    public void menuHistorial(Empleado empleadoLogin){
         System.out.println("Menú Historial.\n");
         System.out.println("A continuación,elija una de las siguientes opciones:\n");
         
@@ -170,7 +171,7 @@ public class Menus {
                                                                   
                     case 4:
                         System.out.println("Ha elegido retornar al menú anteior.\n");
-                        menuLogueado();
+                        menuLogueado(empleadoLogin);
                         return;
                         
                         

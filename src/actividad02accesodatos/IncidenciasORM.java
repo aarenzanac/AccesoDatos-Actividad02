@@ -22,7 +22,7 @@ import org.hibernate.Transaction;
  */
 public class IncidenciasORM {
     HistorialORM hORM = new HistorialORM();
-    
+       
     
     public void insertarEmpleado(){
         Empleado empleadoInsertar = new Empleado();
@@ -68,11 +68,12 @@ public class IncidenciasORM {
         }
         if(login){
             hORM.insertarEvento("I", empleadoLogin);
-            m.menuLogueado();
+            m.menuLogueado(empleadoLogin);
             
         }else{
             System.out.println("Nombre de usuario o contraseña incorrectos. \n");
         }
+        
     }
     
     public void modificarEmpleado(){
@@ -167,17 +168,20 @@ public class IncidenciasORM {
         
     }
     
-    public void insertarIncidencia(){
+    public void insertarIncidencia(Empleado empleadoLogin){
         Incidencia nuevaIncidencia = crearIncidencia();
         Session session = NewHibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.save(nuevaIncidencia);
+        if(nuevaIncidencia.getTipo().equals("Urgente")){
+           hORM.insertarEvento("U", empleadoLogin); 
+        }
         tx.commit();
         session.close();
         System.out.println("Incidencia insertada con éxito.\n");
     }
     
-    public void obtenerIncidenciasEmpleadoDestino(){
+    public void obtenerIncidenciasEmpleadoDestino(Empleado empleadoLogin){
         Empleado empleadoDestino = crearEmpleadoComprobaciones();
         
         boolean existe = comprobarExistenciaEmpleado(empleadoDestino);
@@ -190,11 +194,12 @@ public class IncidenciasORM {
             for(int i = 0; i < incidenciasPorEmpleadoDestino.size(); i++){
                 mostrarIncidencia((Incidencia) incidenciasPorEmpleadoDestino.get(i));
             }
-         //hORM.insertarEvento("C", e);
+         
         }
+        hORM.insertarEvento("C", empleadoLogin);
     }
     
-    public void obtenerIncidenciasEmpleadoOrigen(){
+    public void obtenerIncidenciasEmpleadoOrigen(Empleado empleadoLogin){
         Empleado empleadoOrigen = crearEmpleadoComprobaciones();
         
         boolean existe = comprobarExistenciaEmpleado(empleadoOrigen);
@@ -206,9 +211,9 @@ public class IncidenciasORM {
             System.out.println("Listado de incidencias para el usuario " + empleadoOrigen.getNombreusuario());
             for(int i = 0; i < incidenciasPorEmpleadoOrigen.size(); i++){
                 mostrarIncidencia((Incidencia) incidenciasPorEmpleadoOrigen.get(i));
-            }
-         //hORM.insertarEvento("C", e);    
+            } 
         }
+        hORM.insertarEvento("C", empleadoLogin);
     }
     
     public static Empleado crearEmpleadoComprobaciones(){
