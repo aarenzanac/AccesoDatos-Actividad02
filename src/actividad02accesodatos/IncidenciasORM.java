@@ -242,12 +242,17 @@ public class IncidenciasORM {
     
     public static Empleado seleccionarEmpleado(Empleado e){
         Session session = NewHibernateUtil.getSessionFactory().openSession();
-        String c = "select e from Empleado e WHERE nombreusuario = '" + e.getNombreusuario() + "'";
-        Query q = session.createQuery(c);
-        List results = q.list();
+        Transaction tx = session.beginTransaction();
+        Empleado empleadoSeleccionado = (Empleado)session.get(Empleado.class,e.getNombreusuario());
         session.close();
-        Empleado empleadoSeleccionado = (Empleado) results.get(0);
+        
+        //String c = "select e from Empleado e WHERE nombreusuario = '" + e.getNombreusuario() + "'";
+        //Query q = session.createQuery(c);
+        //List results = q.list();
+        //Empleado empleadoSeleccionado = (Empleado) results.get(0);
+        
         return empleadoSeleccionado;
+        
     }
     
     public static boolean comprobarLoginEmpleado(Empleado e){
@@ -270,19 +275,23 @@ public class IncidenciasORM {
         List results = q.list();
         session.close();
         if(!results.isEmpty()){
-                return true;
-            }else{
-                return false;
-            }
+            return true;
+        }else{
+            return false;
+        }
+        
     }
     
     public static Incidencia seleccionarIncidencia(Incidencia i){
         Session session = NewHibernateUtil.getSessionFactory().openSession();
-        String c = "select i from Incidencia i WHERE idincidencia = " + i.getIdincidencia();
-        Query q = session.createQuery(c);
-        List results = q.list();
+        Transaction tx = session.beginTransaction();
+        Incidencia incidenciaSeleccionada = (Incidencia)session.get(Incidencia.class,i.getIdincidencia());
         session.close();
-        Incidencia incidenciaSeleccionada = (Incidencia) results.get(0);
+                
+        //String c = "select i from Incidencia i WHERE idincidencia = " + i.getIdincidencia();
+        //Query q = session.createQuery(c);
+        //List results = q.list();
+        
         return incidenciaSeleccionada;
     }
     

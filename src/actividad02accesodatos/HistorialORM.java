@@ -21,6 +21,10 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import PideDatos.PideDatos;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,26 +65,52 @@ public class HistorialORM {
         
     }
     
-    public void obtenerRankingCantidadIncidenciasUrgentesEmpleadoOrigen(){
+    public List<Object[]> obtenerRankingCantidadIncidenciasUrgentesEmpleadoOrigen(){
         Session session = NewHibernateUtil.getSessionFactory().openSession();
-        String c = "select h from Historial h where tipo = 'U' order by empleado";
+        String c = "select count(h.empleado), h.empleado from Historial h where h.tipo = 'U' group by h.empleado order by count(h.empleado) desc";
         Query q = session.createQuery(c);
-        List results = q.list();
+        List<Object[]> results = q.list();
         session.close();
-        ArrayList<Historial> listaEventosUrgentes = new ArrayList<Historial>();
-        for(int i = 0; i < results.size(); i++){
-            Historial h = (Historial) results.get(i);
-            listaEventosUrgentes.add(h);
+        System.out.println("Nº Incidencias ----- Nombre");
+        for(Object[] datos : results){
+            Empleado em = (Empleado) datos[1];
+            System.out.println("     " + datos[0] + " ------------- " + em.getNombrecompleto());
         }
-        for(int i = 0; i < listaEventosUrgentes.size(); i++){
-            mostrarEventoHistorial(listaEventosUrgentes.get(i));
-        }
+        System.out.println("\n");
         
-        
-           
+        return results;
     }
     
-    public void obtenerPosicionRankingPorEmpleado(){}
+    public void obtenerPosicionRankingPorEmpleado(){
+        Empleado e = new Empleado();
+        int posicion = 1;
+        try {
+            e.setNombreusuario(PideDatos.pideString("Introduzca el nombre de usuario del que desea obtener la posición: \n"));
+        } catch (IOException ex) {
+            Logger.getLogger(HistorialORM.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         boolean existe = comprobarExistenciaEmpleado(e);
+         System.out.println(existe);
+        
+        if(!existe){
+            System.out.println("Nombre de usuario inexistente. Introduzca un nombre de usuario existente.\n");
+        }else{
+            List<Object[]> ranking = obtenerRankingCantidadIncidenciasUrgentesEmpleadoOrigen();
+            for(Object[] datos : ranking){
+                Empleado em = (Empleado) datos[1];
+                if(em.getNombreusuario().equals(e.getNombreusuario())){
+                    System.out.println("La posición en el ranking de empleados creadores de incidencias urgentes es: " + posicion + "\n");
+                }else{
+                    posicion ++;
+                    if(posicion == ranking.size()){
+                        System.out.println("El empleado introducido no está en el ranking con lo que no tiene incidencias urgentes creadas.\n");
+                    }
+                }
+            
+            }           
+        }
+        System.out.println("\n");
+    }
     
         
     public static String obtenerFechaHora(){
